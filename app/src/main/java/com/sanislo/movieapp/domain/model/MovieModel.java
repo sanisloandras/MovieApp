@@ -1,12 +1,5 @@
 package com.sanislo.movieapp.domain.model;
 
-import android.arch.persistence.room.PrimaryKey;
-
-import com.sanislo.movieapp.persistence.response.movieDetails.GenresItem;
-import com.sanislo.movieapp.persistence.response.movieDetails.ProductionCompaniesItem;
-import com.sanislo.movieapp.persistence.response.movieDetails.ProductionCountriesItem;
-import com.sanislo.movieapp.persistence.response.movieDetails.SpokenLanguagesItem;
-
 import java.util.List;
 
 public class MovieModel {

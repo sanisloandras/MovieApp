@@ -5,6 +5,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.sanislo.movieapp.persistence.dao.MovieDao;
+import com.sanislo.movieapp.persistence.dao.MovieJoinDao;
 import com.sanislo.movieapp.persistence.dao.UpcomingDao;
 import com.sanislo.movieapp.persistence.db.MovieAppDatabase;
 
@@ -37,6 +38,11 @@ public class DatabaseModule {
     @Provides
     MovieDao providesMovieDao(MovieAppDatabase database) {
         return database.movieDao();
+    }
+
+    @Provides
+    MovieJoinDao providesMovieJoinDao(MovieAppDatabase database) {
+        return database.movieJoinDao();
     }
 }
 
