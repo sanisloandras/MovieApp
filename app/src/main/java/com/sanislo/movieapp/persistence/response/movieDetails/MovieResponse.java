@@ -1,4 +1,4 @@
-package com.sanislo.movieapp.persistence.response;
+package com.sanislo.movieapp.persistence.response.movieDetails;
 
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
@@ -51,7 +51,7 @@ public class MovieResponse {
 	private int runtime;
 
 	@SerializedName("poster_path")
-	private Object posterPath;
+	private String posterPath;
 
 	@SerializedName("spoken_languages")
 	private List<SpokenLanguagesItem> spokenLanguages;
@@ -200,11 +200,11 @@ public class MovieResponse {
 		return runtime;
 	}
 
-	public void setPosterPath(Object posterPath){
+	public void setPosterPath(String posterPath){
 		this.posterPath = posterPath;
 	}
 
-	public Object getPosterPath(){
+	public String getPosterPath(){
 		return posterPath;
 	}
 

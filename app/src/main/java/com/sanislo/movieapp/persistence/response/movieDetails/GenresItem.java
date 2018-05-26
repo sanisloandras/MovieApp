@@ -1,4 +1,4 @@
-package com.sanislo.movieapp.persistence.response;
+package com.sanislo.movieapp.persistence.response.movieDetails;
 
 import com.google.gson.annotations.SerializedName;
 

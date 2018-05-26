@@ -12,7 +12,8 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"\"")
+            buildConfigField("String", "BASE_URL", "\"https://api.themoviedb.org/3/\"")
+            buildConfigField("String", "API_KEY", "\"fa6acf41f334cf804345610679104a82\"")
         }
         release {
             minifyEnabled false
@@ -67,4 +68,16 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$rootProject.lifecycle"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.lifecycle"
+
+    // Room
+    implementation "android.arch.persistence.room:runtime:$rootProject.room"
+    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room"
+    implementation "android.arch.persistence.room:rxjava2:$room"
+    implementation "android.arch.paging:runtime:$rootProject.paging"
+    implementation "android.arch.paging:rxjava2:$rootProject.paging_rxjava_support"
+    // ReactiveStreams support for LiveData
+    implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
+
+    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
 }
