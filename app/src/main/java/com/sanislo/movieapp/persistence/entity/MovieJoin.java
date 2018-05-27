@@ -4,15 +4,13 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 
 @Entity(tableName = "movie_join",
-    primaryKeys = { "movieId, genreId"},
-    foreignKeys = {
-            @ForeignKey(entity = MovieEntity.class,
+    primaryKeys = {"movieId", "genreId"},
+    foreignKeys = {@ForeignKey(entity = MovieEntity.class,
                     parentColumns = "id",
                     childColumns = "movieId"),
             @ForeignKey(entity = GenreEntity.class,
                     parentColumns = "id",
-                    childColumns = "genreId")
-    }
+                    childColumns = "genreId")}
 )
 public class MovieJoin {
     private int movieId;
@@ -37,5 +35,13 @@ public class MovieJoin {
 
     public void setGenreId(int genreId) {
         this.genreId = genreId;
+    }
+
+    @Override
+    public String toString() {
+        return "MovieJoin{" +
+                "movieId=" + movieId +
+                ", genreId=" + genreId +
+                '}';
     }
 }

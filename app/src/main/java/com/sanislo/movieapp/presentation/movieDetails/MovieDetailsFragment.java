@@ -8,17 +8,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.sanislo.movieapp.R;
 import com.sanislo.movieapp.databinding.FragmentMovieDetailsBinding;
-import com.sanislo.movieapp.databinding.FragmentUpcomingMoviesBinding;
 import com.sanislo.movieapp.domain.model.MovieModel;
-import com.sanislo.movieapp.presentation.upcomingMovies.UpcomingMoviesViewModel;
+import com.sanislo.movieapp.domain.model.VideoModel;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -62,7 +63,7 @@ public class MovieDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_upcoming_movies,
+                R.layout.fragment_movie_details,
                 container,
                 false);
         mBinding.setViewModel(mViewModel);
@@ -73,11 +74,24 @@ public class MovieDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel.getMovieModelLiveData(getArguments().getInt(EXTRA_MOVIE_ID))
-                .observe(this, new Observer<MovieModel>() {
-                    @Override
-                    public void onChanged(@Nullable MovieModel movieModel) {
-                        Log.d(TAG, "onChanged: " + movieModel);
-                    }
+                .observe(this, movieModel -> {
+                    if (movieModel == null) return;
+                    Log.d(TAG, "onChanged: " + movieModel);
+                    mBinding.tvMovieTitle.setText(movieModel.getTitle());
+                    mBinding.tvOverview.setText(movieModel.getOverview());
+                    mBinding.tvReleaseDate.setText(movieModel.getReleaseDate());
+                    Glide.with(getContext())
+                            .load("https://image.tmdb.org/t/p/original/"
+                                    + movieModel.getBackdropPath())
+                            .into(mBinding.ivBackdrop);
+                    Glide.with(getContext())
+                            .load("https://image.tmdb.org/t/p/original/"
+                                    + movieModel.getPosterPath())
+                            .into(mBinding.ivPoster);
+                });
+        mViewModel.getVideosForMovieLiveData(getArguments().getInt(EXTRA_MOVIE_ID))
+                .observe(this, videoModels -> {
+                    Log.d(TAG, "onChanged: videoModels: " + videoModels);
                 });
     }
 }

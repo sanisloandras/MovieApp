@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import com.sanislo.movieapp.R;
 import com.sanislo.movieapp.databinding.FragmentUpcomingMoviesBinding;
 import com.sanislo.movieapp.domain.model.MovieListItemModel;
-import com.sanislo.movieapp.persistence.entity.MovieListItemEntity;
 import com.sanislo.movieapp.presentation.movieDetails.MovieDetailsFragment;
 
 import javax.inject.Inject;
@@ -76,6 +75,7 @@ public class UpcomingMoviesFragment extends Fragment {
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fl_fragment_container, fragment)
+                    .addToBackStack(null)
                     .commit();
         }
     };

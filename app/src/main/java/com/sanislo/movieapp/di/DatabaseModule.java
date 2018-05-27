@@ -4,9 +4,12 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import com.sanislo.movieapp.global.MovieApp;
+import com.sanislo.movieapp.persistence.dao.GenreDao;
 import com.sanislo.movieapp.persistence.dao.MovieDao;
 import com.sanislo.movieapp.persistence.dao.MovieJoinDao;
 import com.sanislo.movieapp.persistence.dao.UpcomingDao;
+import com.sanislo.movieapp.persistence.dao.VideoDao;
 import com.sanislo.movieapp.persistence.db.MovieAppDatabase;
 
 import javax.inject.Singleton;
@@ -43,6 +46,16 @@ public class DatabaseModule {
     @Provides
     MovieJoinDao providesMovieJoinDao(MovieAppDatabase database) {
         return database.movieJoinDao();
+    }
+
+    @Provides
+    VideoDao providesVideoDao(MovieAppDatabase database) {
+        return database.videoDao();
+    }
+
+    @Provides
+    GenreDao providesGenreDao(MovieAppDatabase database) {
+        return database.genreDao();
     }
 }
 

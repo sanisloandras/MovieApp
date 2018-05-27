@@ -2,9 +2,14 @@ package com.sanislo.movieapp.presentation.movieDetails;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.sanislo.movieapp.domain.model.MovieModel;
+import com.sanislo.movieapp.domain.model.VideoModel;
 import com.sanislo.movieapp.domain.movie.MovieRepository;
+import com.sanislo.movieapp.domain.video.VideoRepository;
+
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -16,20 +21,50 @@ public class MovieDetailsViewModel extends ViewModel {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private MovieRepository movieRepository;
+    private VideoRepository videoRepository;
 
-    public MovieDetailsViewModel(MovieRepository movieRepository) {
+    public MovieDetailsViewModel(MovieRepository movieRepository, VideoRepository videoRepository) {
         this.movieRepository = movieRepository;
+        this.videoRepository = videoRepository;
     }
 
     public void loadMovie(int id) {
         Disposable d = movieRepository.movie(id)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .doOnSuccess(result -> {
+                    loadVideos(id);
+                })
+                //.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+
+                }, error -> {
+                    Log.d(TAG, "loadMovie: error", error);
+                });
+        compositeDisposable.add(d);
+    }
+
+    public void loadVideos(int id) {
+        Disposable d = videoRepository.videos(id)
+                .subscribeOn(Schedulers.io())
+                .subscribe(result -> {
+                    Log.d(TAG, "loadVideos: " + result);
+                }, error -> {
+                    Log.d(TAG, "loadVideos: error", error);
+                });
         compositeDisposable.add(d);
     }
 
     public LiveData<MovieModel> getMovieModelLiveData(int id) {
         return movieRepository.movieLiveData(id);
+    }
+
+    public LiveData<List<VideoModel>> getVideosForMovieLiveData(int movieId) {
+        return videoRepository.videosLiveData(movieId);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.clear();
     }
 }

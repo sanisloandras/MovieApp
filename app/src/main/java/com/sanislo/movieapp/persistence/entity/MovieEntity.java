@@ -1,5 +1,6 @@
 package com.sanislo.movieapp.persistence.entity;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -23,6 +24,7 @@ public class MovieEntity {
     @Ignore
     private List<ProductionCountriesItem> productionCountries;
     @PrimaryKey
+    @ColumnInfo(name = "id")
     private int id;
     private int voteCount;
     private int budget;
