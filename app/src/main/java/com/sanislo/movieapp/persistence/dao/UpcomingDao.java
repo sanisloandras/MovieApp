@@ -19,4 +19,7 @@ public interface UpcomingDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] save(List<MovieListItemEntity> movieListItemEntities);
+
+    @Query("DELETE FROM movies")
+    void clear();
 }

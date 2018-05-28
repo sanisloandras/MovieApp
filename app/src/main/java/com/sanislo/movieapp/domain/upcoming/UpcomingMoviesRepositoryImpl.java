@@ -43,6 +43,18 @@ public class UpcomingMoviesRepositoryImpl implements UpcomingMoviesRepository {
     }
 
     @Override
+    public Single<MovieListResponse> refreshUpcoming() {
+        return mMovieAppApi.upcoming()
+                .doOnSuccess(result -> {
+                    mUpcomingDao.clear();
+                    saveUpcomingMovies(result);
+                })
+                .doOnSuccess(movieListResponse -> {
+                    Log.d(TAG, "refreshUpcoming: " + movieListResponse);
+                });
+    }
+
+    @Override
     public void saveUpcomingMovies(MovieListResponse movieListResponse) {
         Executors.newSingleThreadExecutor().execute(() -> {
             long[] inseted = mUpcomingDao.save(movieResponseMapper.map2(movieListResponse.getResults()));

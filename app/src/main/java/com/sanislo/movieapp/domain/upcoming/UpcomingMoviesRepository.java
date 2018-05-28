@@ -12,6 +12,7 @@ import io.reactivex.Single;
 public interface UpcomingMoviesRepository {
     Single<MovieListResponse> getUpcoming(int page);
     Single<MovieListResponse> getUpcoming();
+    Single<MovieListResponse> refreshUpcoming();
     void saveUpcomingMovies(MovieListResponse movieListResponse);
     LiveData<PagedList<MovieListItemModel>> getUpcomingLiveData();
 }

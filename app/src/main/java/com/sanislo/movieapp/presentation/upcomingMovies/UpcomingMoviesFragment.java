@@ -1,5 +1,6 @@
 package com.sanislo.movieapp.presentation.upcomingMovies;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout;
 import com.sanislo.movieapp.R;
 import com.sanislo.movieapp.databinding.FragmentUpcomingMoviesBinding;
 import com.sanislo.movieapp.domain.model.MovieListItemModel;
@@ -27,6 +29,8 @@ import com.sanislo.movieapp.presentation.movieDetails.MovieDetailsFragment;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class UpcomingMoviesFragment extends Fragment {
     private static final String TAG = UpcomingMoviesFragment.class.getSimpleName();
@@ -39,6 +43,7 @@ public class UpcomingMoviesFragment extends Fragment {
 
     private HasDualPaneSupport hasDualPaneSupport;
 
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FragmentUpcomingMoviesBinding mBinding;
     private UpcomingMoviesViewModel mViewModel;
     private UpcomingMoviesAdapter mAdapter;
@@ -125,6 +130,12 @@ public class UpcomingMoviesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setupAdapter();
+        setupSwipeRefresh();
+        mViewModel.getIsRefreshing().observe(this, isRefreshing -> mBinding.refresh.setRefreshing(isRefreshing));
+    }
+
+    private void setupAdapter() {
         int spanCount = getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_LANDSCAPE ?
                 SPAN_COUNT_LANDSCAPE : SPAN_COUNT_PORTRAIT;
@@ -133,11 +144,24 @@ public class UpcomingMoviesFragment extends Fragment {
         mBinding.rvUpcomingMovies.setAdapter(mAdapter);
     }
 
+    private void setupSwipeRefresh() {
+        Disposable swipeRefreshDisposable =
+                RxSwipeRefreshLayout.refreshes(mBinding.refresh)
+                        .subscribe(o -> mViewModel.refresh());
+        compositeDisposable.add(swipeRefreshDisposable);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         getActivity().getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+    }
+
+    @Override
+    public void onDestroyView() {
+        compositeDisposable.clear();
+        super.onDestroyView();
     }
 }
