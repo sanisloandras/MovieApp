@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.sanislo.movieapp.R;
 import com.sanislo.movieapp.databinding.FragmentMovieDetailsBinding;
 import com.sanislo.movieapp.domain.model.MovieModel;
 import com.sanislo.movieapp.domain.model.VideoModel;
+import com.sanislo.movieapp.domain.model.YoutubeVideoModel;
 
 import java.util.List;
 
@@ -34,7 +37,7 @@ public class MovieDetailsFragment extends Fragment {
 
     private FragmentMovieDetailsBinding mBinding;
     private MovieDetailsViewModel mViewModel;
-    private int movieId;
+    private YoutubeVideosAdapter youtubeVideosAdapter;
 
     public static MovieDetailsFragment newInstance(int movieId) {
         Bundle args = new Bundle();
@@ -49,7 +52,33 @@ public class MovieDetailsFragment extends Fragment {
         AndroidSupportInjection.inject(this);
         super.onCreate(savedInstanceState);
         obtainViewModel();
+        youtubeVideosAdapter = new YoutubeVideosAdapter(getDiffCallback(), getClickInteractor());
         mViewModel.loadMovie(getArguments().getInt(EXTRA_MOVIE_ID));
+    }
+
+    @NonNull
+    private DiffUtil.ItemCallback<YoutubeVideoModel> getDiffCallback() {
+        return new DiffUtil.ItemCallback<YoutubeVideoModel>() {
+            @Override
+            public boolean areItemsTheSame(YoutubeVideoModel oldItem, YoutubeVideoModel newItem) {
+                return oldItem.getId().equals(newItem.getId());
+            }
+
+            @Override
+            public boolean areContentsTheSame(YoutubeVideoModel oldItem, YoutubeVideoModel newItem) {
+                return oldItem.equals(newItem);
+            }
+        };
+    }
+
+    @NonNull
+    private YoutubeVideosAdapter.ClickInteractor getClickInteractor() {
+        return new YoutubeVideosAdapter.ClickInteractor() {
+            @Override
+            public void onClick(YoutubeVideoModel youtubeVideoModel) {
+
+            }
+        };
     }
 
     private void obtainViewModel() {
@@ -73,6 +102,11 @@ public class MovieDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mBinding.rvYoutubeVideos.setLayoutManager(
+                new LinearLayoutManager(getContext(),
+                        LinearLayoutManager.HORIZONTAL,
+                        false));
+        mBinding.rvYoutubeVideos.setAdapter(youtubeVideosAdapter);
         mViewModel.getMovieModelLiveData(getArguments().getInt(EXTRA_MOVIE_ID))
                 .observe(this, movieModel -> {
                     if (movieModel == null) return;
@@ -89,9 +123,11 @@ public class MovieDetailsFragment extends Fragment {
                                     + movieModel.getPosterPath())
                             .into(mBinding.ivPoster);
                 });
-        mViewModel.getVideosForMovieLiveData(getArguments().getInt(EXTRA_MOVIE_ID))
-                .observe(this, videoModels -> {
-                    Log.d(TAG, "onChanged: videoModels: " + videoModels);
+        mViewModel.getYoutubeVideosForMovie(getArguments().getInt(EXTRA_MOVIE_ID))
+                .observe(this, youtubeVideoModels -> {
+                    Log.d(TAG, "onChanged: youtubeVideoModels: " + youtubeVideoModels);
+                    if (youtubeVideoModels == null || youtubeVideoModels.isEmpty()) return;
+                    youtubeVideosAdapter.submitList(youtubeVideoModels);
                 });
     }
 }

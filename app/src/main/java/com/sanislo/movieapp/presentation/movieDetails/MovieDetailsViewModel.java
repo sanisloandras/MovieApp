@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.sanislo.movieapp.domain.model.MovieModel;
 import com.sanislo.movieapp.domain.model.VideoModel;
+import com.sanislo.movieapp.domain.model.YoutubeVideoModel;
 import com.sanislo.movieapp.domain.movie.MovieRepository;
 import com.sanislo.movieapp.domain.video.VideoRepository;
 
@@ -60,6 +61,10 @@ public class MovieDetailsViewModel extends ViewModel {
 
     public LiveData<List<VideoModel>> getVideosForMovieLiveData(int movieId) {
         return videoRepository.videosLiveData(movieId);
+    }
+
+    public LiveData<List<YoutubeVideoModel>> getYoutubeVideosForMovie(int movieId) {
+        return videoRepository.youtubeVideosLiveData(movieId);
     }
 
     @Override

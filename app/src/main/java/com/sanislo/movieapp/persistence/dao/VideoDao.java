@@ -9,6 +9,9 @@ import com.sanislo.movieapp.persistence.entity.VideoEntity;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+
 @Dao
 public interface VideoDao {
     @Insert
@@ -16,4 +19,11 @@ public interface VideoDao {
 
     @Query("SELECT * FROM video WHERE movieId=:movieId")
     LiveData<List<VideoEntity>> getVideosForMovie(int movieId);
+
+    @Query("SELECT * FROM video WHERE movieId=:movieId")
+    Flowable<List<VideoEntity>> getVideosForMovieFlowable(int movieId);
+
+    @Query("SELECT * FROM video WHERE movieId=:movieId AND site=:site")
+    LiveData<List<VideoEntity>> getVideosForMovieBySiteLiveData(int movieId,
+                                                                 String site);
 }

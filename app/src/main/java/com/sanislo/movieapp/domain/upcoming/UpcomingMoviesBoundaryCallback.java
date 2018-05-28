@@ -5,11 +5,12 @@ import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.sanislo.movieapp.domain.model.MovieListItemModel;
 import com.sanislo.movieapp.persistence.entity.MovieListItemEntity;
 
 import io.reactivex.schedulers.Schedulers;
 
-public class UpcomingMoviesBoundaryCallback extends PagedList.BoundaryCallback<MovieListItemEntity> {
+public class UpcomingMoviesBoundaryCallback extends PagedList.BoundaryCallback<MovieListItemModel> {
     public static final String TAG = UpcomingMoviesBoundaryCallback.class.getSimpleName();
 
     private UpcomingMoviesRepository upcomingMoviesRepository;
@@ -27,7 +28,7 @@ public class UpcomingMoviesBoundaryCallback extends PagedList.BoundaryCallback<M
     }
 
     @Override
-    public void onItemAtEndLoaded(@NonNull MovieListItemEntity itemAtEnd) {
+    public void onItemAtEndLoaded(@NonNull MovieListItemModel itemAtEnd) {
         super.onItemAtEndLoaded(itemAtEnd);
         Log.d(TAG, "onItemAtEndLoaded: ");
         load();
