@@ -34,6 +34,7 @@ public class MovieDetailsViewModel extends ViewModel {
     public void loadMovie(int id) {
         Disposable d = movieRepository.movie(id)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(result -> {
                     loadVideos(id);
                 })
@@ -49,6 +50,7 @@ public class MovieDetailsViewModel extends ViewModel {
     public void loadVideos(int id) {
         Disposable d = videoRepository.videos(id)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     Log.d(TAG, "loadVideos: " + result);
                 }, error -> {

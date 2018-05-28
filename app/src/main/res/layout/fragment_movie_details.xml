@@ -14,7 +14,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_backdrop"
@@ -49,7 +49,7 @@
                 android:id="@+id/tv_movie_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@tools:sample/lorem"
+                tools:text="@tools:sample/lorem"
                 app:layout_constraintLeft_toRightOf="@+id/guideline_poster"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/iv_poster"/>
@@ -58,7 +58,7 @@
                 android:id="@+id/tv_release_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@tools:sample/lorem"
+                tools:text="@tools:sample/lorem"
                 app:layout_constraintLeft_toRightOf="@+id/guideline_poster"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"/>
