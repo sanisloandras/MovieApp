@@ -1,18 +1,20 @@
 package com.sanislo.movieapp.presentation.movieDetails;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,11 +22,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.sanislo.movieapp.R;
 import com.sanislo.movieapp.databinding.FragmentMovieDetailsBinding;
-import com.sanislo.movieapp.domain.model.MovieModel;
-import com.sanislo.movieapp.domain.model.VideoModel;
 import com.sanislo.movieapp.domain.model.YoutubeVideoModel;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -53,6 +51,11 @@ public class MovieDetailsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         AndroidSupportInjection.inject(this);
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        getActivity().getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
         obtainViewModel();
         youtubeVideosAdapter = new YoutubeVideosAdapter(getDiffCallback(), getClickInteractor());
         mViewModel.loadMovie(getArguments().getInt(EXTRA_MOVIE_ID));
@@ -83,7 +86,7 @@ public class MovieDetailsFragment extends Fragment {
                         CustomYoutubePlayerFragment.newInstance(youtubeVideoModel.getKey());
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fl_fragment_container, customYoutubePlayerFragment)
+                        .replace(R.id.fl_movie_list_container, customYoutubePlayerFragment)
                         .addToBackStack(null)
                         .commit();
             }
@@ -111,6 +114,10 @@ public class MovieDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mBinding.toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(null);
         mBinding.rvYoutubeVideos.setLayoutManager(
                 new LinearLayoutManager(getContext(),
                         LinearLayoutManager.HORIZONTAL,
@@ -142,5 +149,15 @@ public class MovieDetailsFragment extends Fragment {
             Snackbar.make(mBinding.getRoot(), throwable != null ? throwable.getLocalizedMessage()
                     : getString(R.string.error), Snackbar.LENGTH_LONG).show();
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

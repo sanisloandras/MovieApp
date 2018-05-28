@@ -2,12 +2,15 @@ package com.sanislo.movieapp.presentation.upcomingMovies;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +28,9 @@ import dagger.android.support.AndroidSupportInjection;
 
 public class UpcomingMoviesFragment extends Fragment {
     private static final String TAG = UpcomingMoviesFragment.class.getSimpleName();
+
+    private static final int SPAN_COUNT_PORTRAIT = 2;
+    private static final int SPAN_COUNT_LANDSCAPE = 4;
 
     @Inject
     ViewModelProvider.Factory mFactory;
@@ -74,7 +80,7 @@ public class UpcomingMoviesFragment extends Fragment {
             MovieDetailsFragment fragment = MovieDetailsFragment.newInstance(movieListItemModel.getId());
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fl_fragment_container, fragment)
+                    .replace(R.id.fl_movie_list_container, fragment)
                     .addToBackStack(null)
                     .commit();
         }
@@ -102,7 +108,19 @@ public class UpcomingMoviesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mBinding.rvUpcomingMovies.setLayoutManager(new LinearLayoutManager(getContext()));
+        int spanCount = getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_LANDSCAPE ?
+                SPAN_COUNT_LANDSCAPE : SPAN_COUNT_PORTRAIT;
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), spanCount);
+        mBinding.rvUpcomingMovies.setLayoutManager(gridLayoutManager);
         mBinding.rvUpcomingMovies.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
     }
 }

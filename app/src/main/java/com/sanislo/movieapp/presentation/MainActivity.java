@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         setContentView(R.layout.activity_main);
         if (savedInstanceState != null) return;
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fl_fragment_container, UpcomingMoviesFragment.newInstance())
+                .add(R.id.fl_movie_list_container, UpcomingMoviesFragment.newInstance())
                 .commit();
     }
 

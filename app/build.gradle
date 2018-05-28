@@ -81,4 +81,6 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+
+    implementation 'com.android.support:palette-v7:27.1.1'
 }
