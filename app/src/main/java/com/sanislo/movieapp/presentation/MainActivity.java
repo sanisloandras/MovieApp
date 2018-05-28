@@ -14,7 +14,8 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class MainActivity extends AppCompatActivity
+        implements HasSupportFragmentInjector, HasDualPaneSupport {
 
     @Inject
     DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
@@ -35,4 +36,18 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         return fragmentDispatchingAndroidInjector;
     }
 
+    @Override
+    public boolean isInDualPaneMode() {
+        return findViewById(R.id.fl_movie_details_container) != null;
+    }
+
+    @Override
+    public int getLeftContainerId() {
+        return R.id.fl_movie_list_container;
+    }
+
+    @Override
+    public int getRightContainer() {
+        return R.id.fl_movie_details_container;
+    }
 }

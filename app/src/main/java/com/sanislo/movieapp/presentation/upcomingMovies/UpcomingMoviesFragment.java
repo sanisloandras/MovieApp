@@ -2,6 +2,7 @@ package com.sanislo.movieapp.presentation.upcomingMovies;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import com.sanislo.movieapp.R;
 import com.sanislo.movieapp.databinding.FragmentUpcomingMoviesBinding;
 import com.sanislo.movieapp.domain.model.MovieListItemModel;
+import com.sanislo.movieapp.presentation.HasDualPaneSupport;
 import com.sanislo.movieapp.presentation.movieDetails.MovieDetailsFragment;
 
 import javax.inject.Inject;
@@ -35,6 +37,8 @@ public class UpcomingMoviesFragment extends Fragment {
     @Inject
     ViewModelProvider.Factory mFactory;
 
+    private HasDualPaneSupport hasDualPaneSupport;
+
     private FragmentUpcomingMoviesBinding mBinding;
     private UpcomingMoviesViewModel mViewModel;
     private UpcomingMoviesAdapter mAdapter;
@@ -44,6 +48,16 @@ public class UpcomingMoviesFragment extends Fragment {
         UpcomingMoviesFragment fragment = new UpcomingMoviesFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            hasDualPaneSupport = (HasDualPaneSupport) context;
+        } catch (ClassCastException e) {
+            throw new RuntimeException("Parent activity must implement " + HasDualPaneSupport.class.getSimpleName());
+        }
     }
 
     @Override
@@ -78,9 +92,12 @@ public class UpcomingMoviesFragment extends Fragment {
         @Override
         public void onItemClick(MovieListItemModel movieListItemModel) {
             MovieDetailsFragment fragment = MovieDetailsFragment.newInstance(movieListItemModel.getId());
+            int containerId = hasDualPaneSupport.isInDualPaneMode() ?
+                    hasDualPaneSupport.getRightContainer()
+                    : hasDualPaneSupport.getLeftContainerId();
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fl_movie_list_container, fragment)
+                    .replace(containerId, fragment)
                     .addToBackStack(null)
                     .commit();
         }
