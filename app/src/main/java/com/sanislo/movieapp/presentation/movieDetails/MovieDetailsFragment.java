@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.sanislo.movieapp.R;
 import com.sanislo.movieapp.databinding.FragmentMovieDetailsBinding;
 import com.sanislo.movieapp.domain.model.MovieModel;
@@ -76,7 +78,14 @@ public class MovieDetailsFragment extends Fragment {
         return new YoutubeVideosAdapter.ClickInteractor() {
             @Override
             public void onClick(YoutubeVideoModel youtubeVideoModel) {
-
+                YouTubePlayerFragment youTubePlayerFragment = YouTubePlayerFragment.newInstance();
+                CustomYoutubePlayerFragment customYoutubePlayerFragment =
+                        CustomYoutubePlayerFragment.newInstance(youtubeVideoModel.getKey());
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fl_fragment_container, customYoutubePlayerFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         };
     }
@@ -129,5 +138,9 @@ public class MovieDetailsFragment extends Fragment {
                     if (youtubeVideoModels == null || youtubeVideoModels.isEmpty()) return;
                     youtubeVideosAdapter.submitList(youtubeVideoModels);
                 });
+        mViewModel.getError().observe(this, throwable -> {
+            Snackbar.make(mBinding.getRoot(), throwable != null ? throwable.getLocalizedMessage()
+                    : getString(R.string.error), Snackbar.LENGTH_LONG).show();
+        });
     }
 }

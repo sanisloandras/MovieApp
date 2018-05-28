@@ -2,4 +2,5 @@
     <string name="app_name">MovieApp</string>
     <string name="youtube_trailers_label">Youtube Trailers</string>
     <string name="overview_label">Overview</string>
+    <string name="error">SOmething bad happened</string>
 </resources>

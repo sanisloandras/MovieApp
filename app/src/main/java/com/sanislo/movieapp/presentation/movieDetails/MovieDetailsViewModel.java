@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
+import com.sanislo.movieapp.domain.SingleLiveEvent;
 import com.sanislo.movieapp.domain.model.MovieModel;
 import com.sanislo.movieapp.domain.model.VideoModel;
 import com.sanislo.movieapp.domain.model.YoutubeVideoModel;
@@ -21,6 +22,7 @@ public class MovieDetailsViewModel extends ViewModel {
     public static final String TAG = MovieDetailsViewModel.class.getSimpleName();
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private SingleLiveEvent<Throwable> error = new SingleLiveEvent<>();
     private MovieRepository movieRepository;
     private VideoRepository videoRepository;
 
@@ -35,11 +37,11 @@ public class MovieDetailsViewModel extends ViewModel {
                 .doOnSuccess(result -> {
                     loadVideos(id);
                 })
-                //.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
 
                 }, error -> {
                     Log.d(TAG, "loadMovie: error", error);
+                    this.error.setValue(error);
                 });
         compositeDisposable.add(d);
     }
@@ -51,8 +53,13 @@ public class MovieDetailsViewModel extends ViewModel {
                     Log.d(TAG, "loadVideos: " + result);
                 }, error -> {
                     Log.d(TAG, "loadVideos: error", error);
+                    this.error.setValue(error);
                 });
         compositeDisposable.add(d);
+    }
+
+    public SingleLiveEvent<Throwable> getError() {
+        return error;
     }
 
     public LiveData<MovieModel> getMovieModelLiveData(int id) {
