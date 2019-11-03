@@ -63,7 +63,7 @@ public class UpcomingMoviesRepositoryImpl implements UpcomingMoviesRepository {
     }
 
     @Override
-    public LiveData<PagedList<MovieListItemModel>> getUpcomingLiveData() {
+    public LiveData<PagedList<MovieListItemModel>> getUpcomingMoviesLiveData() {
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
                 .setPageSize(PAGE_SIZE)

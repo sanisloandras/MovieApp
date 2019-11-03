@@ -81,7 +81,7 @@ class UpcomingMoviesFragment : Fragment() {
         val movieTitleText = ContextCompat.getColor(requireContext(), R.color.default_movie_title_text_color)
         val movieTitleBackground = ContextCompat.getColor(requireContext(), R.color.default_movie_title_background_color)
         mAdapter = UpcomingMoviesAdapter(diffCallback, movieTitleText, movieTitleBackground, mClickInteractor)
-        mViewModel.movieListItemEntityLiveData.observe(this, Observer { movieListItemEntities ->
+        mViewModel.upcomingMoviesLiveData.observe(this, Observer { movieListItemEntities ->
             mAdapter.submitList(movieListItemEntities)
         })
     }
@@ -106,6 +106,10 @@ class UpcomingMoviesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupAdapter()
         setupSwipeRefresh()
+        observeResfreshing()
+    }
+
+    private fun observeResfreshing() {
         mViewModel.isRefreshing.observe(this, Observer { isRefreshing -> mBinding.refresh.isRefreshing = isRefreshing!! })
     }
 
