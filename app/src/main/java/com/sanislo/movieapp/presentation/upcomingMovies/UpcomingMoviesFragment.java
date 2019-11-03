@@ -98,8 +98,8 @@ public class UpcomingMoviesFragment extends Fragment {
         public void onItemClick(MovieListItemModel movieListItemModel) {
             MovieDetailsFragment fragment = MovieDetailsFragment.newInstance(movieListItemModel.getId());
             int containerId = hasDualPaneSupport.isInDualPaneMode() ?
-                    hasDualPaneSupport.getRightContainer()
-                    : hasDualPaneSupport.getLeftContainerId();
+                    hasDualPaneSupport.rightContainer()
+                    : hasDualPaneSupport.leftContainerId();
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(containerId, fragment)

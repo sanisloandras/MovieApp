@@ -42,12 +42,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public int getLeftContainerId() {
+    public int leftContainerId() {
         return R.id.fl_movie_list_container;
     }
 
     @Override
-    public int getRightContainer() {
+    public int rightContainer() {
         return R.id.fl_movie_details_container;
     }
 }
