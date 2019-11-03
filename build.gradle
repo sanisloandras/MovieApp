@@ -52,8 +52,7 @@ ext {
     lifecycle = '1.1.1'
     room = '1.1.1'
     paging = '1.0.1'
-    paging_rxjava_support = '1.0.0-alpha1'
-    navigation = '1.0.0-alpha01'
+    paging_rxjava_support = '1.0.1'
 
     glideVersion = '4.8.0'
 }
