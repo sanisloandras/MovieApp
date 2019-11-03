@@ -27,19 +27,19 @@ class MovieDetailsFragment : Fragment() {
     @Inject
     lateinit var mFactory: ViewModelProvider.Factory
 
-    private lateinit var mBinding: FragmentMovieDetailsBinding
-    private lateinit var mViewModel: MovieDetailsViewModel
+    private lateinit var binding: FragmentMovieDetailsBinding
+    private lateinit var viewModel: MovieDetailsViewModel
     private lateinit var youtubeVideosAdapter: YoutubeVideosAdapter
 
     private val diffCallback: DiffUtil.ItemCallback<YoutubeVideoModel> = object : DiffUtil.ItemCallback<YoutubeVideoModel>() {
-            override fun areItemsTheSame(oldItem: YoutubeVideoModel, newItem: YoutubeVideoModel): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(oldItem: YoutubeVideoModel, newItem: YoutubeVideoModel): Boolean {
-                return oldItem == newItem
-            }
+        override fun areItemsTheSame(oldItem: YoutubeVideoModel, newItem: YoutubeVideoModel): Boolean {
+            return oldItem.id == newItem.id
         }
+
+        override fun areContentsTheSame(oldItem: YoutubeVideoModel, newItem: YoutubeVideoModel): Boolean {
+            return oldItem == newItem
+        }
+    }
 
     private val clickInteractor = object : YoutubeVideosAdapter.ClickInteractor {
         override fun onClick(youtubeVideoModel: YoutubeVideoModel) {
@@ -61,24 +61,23 @@ class MovieDetailsFragment : Fragment() {
         activity!!.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         activity!!.window.statusBarColor = Color.TRANSPARENT
         obtainViewModel()
-        youtubeVideosAdapter = YoutubeVideosAdapter(diffCallback, clickInteractor)
-        mViewModel.loadMovie(arguments!!.getInt(EXTRA_MOVIE_ID))
+        viewModel.setMovieId(arguments!!.getInt(EXTRA_MOVIE_ID))
     }
 
     private fun obtainViewModel() {
-        mViewModel = ViewModelProviders.of(
+        viewModel = ViewModelProviders.of(
                 this,
                 mFactory)
                 .get(MovieDetailsViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = DataBindingUtil.inflate<FragmentMovieDetailsBinding>(inflater,
+        binding = DataBindingUtil.inflate<FragmentMovieDetailsBinding>(inflater,
                 R.layout.fragment_movie_details,
                 container,
                 false)
-        mBinding.viewModel = mViewModel
-        return mBinding.root
+        binding.viewModel = viewModel
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,15 +90,16 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun setupYoutubeVideosList() {
-        mBinding.rvYoutubeVideos.layoutManager = LinearLayoutManager(context,
+        binding.rvYoutubeVideos.layoutManager = LinearLayoutManager(context,
                 LinearLayoutManager.HORIZONTAL,
                 false)
-        mBinding.rvYoutubeVideos.adapter = youtubeVideosAdapter
+        youtubeVideosAdapter = YoutubeVideosAdapter(diffCallback, clickInteractor)
+        binding.rvYoutubeVideos.adapter = youtubeVideosAdapter
     }
 
     private fun setupActionBar() {
         (activity as AppCompatActivity).apply {
-            setSupportActionBar(mBinding.toolbar)
+            setSupportActionBar(binding.toolbar)
             supportActionBar?.apply {
                 setDisplayShowHomeEnabled(true)
                 setDisplayHomeAsUpEnabled(true)
@@ -109,8 +109,8 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun observeErrors() {
-        mViewModel.error.observe(this, Observer { throwable ->
-            Snackbar.make(mBinding.root, if (throwable != null)
+        viewModel.error.observe(viewLifecycleOwner, Observer { throwable ->
+            Snackbar.make(binding.root, if (throwable != null)
                 throwable.localizedMessage
             else
                 getString(R.string.error), Snackbar.LENGTH_LONG).show()
@@ -118,28 +118,26 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun observeYoutubeVideos() {
-        mViewModel.getYoutubeVideosForMovie(arguments!!.getInt(EXTRA_MOVIE_ID))
-                .observe(this, Observer { youtubeVideoModels ->
-                    youtubeVideosAdapter.submitList(youtubeVideoModels)
-                })
+        viewModel.youtubeVideos.observe(viewLifecycleOwner, Observer {
+            youtubeVideosAdapter.submitList(it)
+        })
     }
 
     private fun observeMovieDetails() {
-        mViewModel.getMovieModelLiveData(arguments!!.getInt(EXTRA_MOVIE_ID))
-                .observe(this, Observer { movieModel ->
-                    if (movieModel == null) return@Observer
-                    mBinding.tvMovieTitle.text = movieModel.title
-                    mBinding.tvOverview.text = movieModel.overview
-                    mBinding.tvReleaseDate.text = movieModel.releaseDate
-                    Glide.with(context!!)
-                            //TODO move this to business logic layer
-                            .load("https://image.tmdb.org/t/p/original/" + movieModel.backdropPath)
-                            .into(mBinding.ivBackdrop)
-                    Glide.with(context!!)
-                            //TODO move this to business logic layer
-                            .load("https://image.tmdb.org/t/p/original/" + movieModel.posterPath)
-                            .into(mBinding.ivPoster)
-                })
+        viewModel.movieDetails.observe(viewLifecycleOwner, Observer { movieModel ->
+            if (movieModel == null) return@Observer
+            binding.tvMovieTitle.text = movieModel.title
+            binding.tvOverview.text = movieModel.overview
+            binding.tvReleaseDate.text = movieModel.releaseDate
+            Glide.with(context!!)
+                    //TODO move this to business logic layer
+                    .load("https://image.tmdb.org/t/p/original/" + movieModel.backdropPath)
+                    .into(binding.ivBackdrop)
+            Glide.with(context!!)
+                    //TODO move this to business logic layer
+                    .load("https://image.tmdb.org/t/p/original/" + movieModel.posterPath)
+                    .into(binding.ivPoster)
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -161,10 +159,9 @@ class MovieDetailsFragment : Fragment() {
             val args = Bundle().apply {
                 putInt(EXTRA_MOVIE_ID, movieId)
             }
-            val fragment = MovieDetailsFragment().apply {
+            return MovieDetailsFragment().apply {
                 arguments = args
             }
-            return fragment
         }
     }
 }

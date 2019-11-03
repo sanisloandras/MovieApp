@@ -1,54 +1,56 @@
 package com.sanislo.movieapp.presentation.movieDetails
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.LiveDataReactiveStreams
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import com.sanislo.movieapp.domain.SingleLiveEvent
 import com.sanislo.movieapp.domain.model.MovieModel
 import com.sanislo.movieapp.domain.model.YoutubeVideoModel
 import com.sanislo.movieapp.domain.movie.MovieRepository
 import com.sanislo.movieapp.domain.video.VideoRepository
+import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 
-//TODO make this work without internet
 class MovieDetailsViewModel(private val movieRepository: MovieRepository, private val videoRepository: VideoRepository) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
+    private val movieIdSubject = BehaviorSubject.create<Int>()
+    private val movieIdLiveData = LiveDataReactiveStreams.fromPublisher(movieIdSubject.toFlowable(BackpressureStrategy.LATEST))
+    val movieDetails: LiveData<MovieModel> = Transformations.switchMap(movieIdLiveData) {
+        movieRepository.movieLiveData(it)
+    }
+    val youtubeVideos: LiveData<List<YoutubeVideoModel>> = Transformations.switchMap(movieIdLiveData) {
+        videoRepository.youtubeVideosLiveData(it)
+    }
     val error = SingleLiveEvent<Throwable>()
 
-    fun loadMovie(id: Int) {
-        val d = movieRepository.movie(id)
-                .subscribeOn(Schedulers.io())
+    init {
+        observeMovieId()
+    }
+
+    @SuppressLint("CheckResult")
+    private fun observeMovieId() {
+        movieIdSubject.switchMapCompletable { movieId ->
+            movieRepository.movie(movieId)
+                    .ignoreElement()
+                    .andThen(videoRepository.videos(movieId).ignoreElement())
+                    .subscribeOn(Schedulers.io())
+        }
+                .doOnSubscribe {
+                    compositeDisposable.add(it)
+                }
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess { result -> loadVideos(id) }
-                .subscribe({ result ->
-
-                }, { error ->
-                    Log.d(TAG, "loadMovie: error", error)
-                    this.error.setValue(error)
+                .subscribe({}, {
+                    error.value = it
                 })
-        compositeDisposable.add(d)
     }
 
-    private fun loadVideos(id: Int) {
-        val d = videoRepository.videos(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result -> Log.d(TAG, "loadVideos: $result") }, { error ->
-                    this.error.setValue(error)
-                })
-        compositeDisposable.add(d)
-    }
-
-    fun getMovieModelLiveData(id: Int): LiveData<MovieModel> {
-        return movieRepository.movieLiveData(id)
-    }
-
-    fun getYoutubeVideosForMovie(movieId: Int): LiveData<List<YoutubeVideoModel>> {
-        return videoRepository.youtubeVideosLiveData(movieId)
-    }
+    fun setMovieId(movieId: Int) = movieIdSubject.onNext(movieId)
 
     override fun onCleared() {
         super.onCleared()
