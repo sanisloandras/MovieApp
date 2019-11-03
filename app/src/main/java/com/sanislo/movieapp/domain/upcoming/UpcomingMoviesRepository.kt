@@ -7,8 +7,8 @@ import com.sanislo.movieapp.persistence.response.movieList.MovieListResponse
 import io.reactivex.Single
 
 interface UpcomingMoviesRepository {
-    val upcoming: Single<MovieListResponse>
-    val upcomingMoviesLiveData: LiveData<PagedList<MovieListItemModel>>
+    fun upcoming(): Single<MovieListResponse>
+    fun upcomingMoviesLiveData(): LiveData<PagedList<MovieListItemModel>>
     fun getUpcoming(page: Int): Single<MovieListResponse>
     fun refreshUpcoming(): Single<MovieListResponse>
     fun saveUpcomingMovies(movieListResponse: MovieListResponse)
