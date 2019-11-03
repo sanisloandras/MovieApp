@@ -1,3 +1,16 @@
 package com.sanislo.movieapp.domain.model
 
-data class MovieListItemModel(var _id: Int, var overview: String?, var originalLanguage: String?, var originalTitle: String?, var isVideo: Boolean, var title: String?, var posterPath: String?, var backdropPath: String?, var releaseDate: String?, var popularity: Double, var voteAverage: Double, var id: Int, var isAdult: Boolean, var voteCount: Int)
+data class MovieListItemModel(val _id: Int,
+                              val overview: String?,
+                              val originalLanguage: String?,
+                              val originalTitle: String?,
+                              val isVideo: Boolean,
+                              val title: String?,
+                              val posterPath: String?,
+                              val backdropPath: String?,
+                              val releaseDate: String?,
+                              val popularity: Double,
+                              val voteAverage: Double,
+                              val id: Int,
+                              val isAdult: Boolean,
+                              val voteCount: Int)
