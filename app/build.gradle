@@ -49,6 +49,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
 
     //rxbinding
+    //TODO update this dependency
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'

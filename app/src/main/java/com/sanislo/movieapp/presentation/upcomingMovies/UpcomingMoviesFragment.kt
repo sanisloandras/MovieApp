@@ -99,13 +99,13 @@ class UpcomingMoviesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupAdapter()
         setupSwipeRefresh()
-        observeResfreshing()
+        observeRefreshing()
         observeErrors()
         observeMoviesList()
     }
 
-    private fun observeResfreshing() {
-        viewModel.isRefreshing.observe(this, Observer { isRefreshing -> binding.refresh.isRefreshing = isRefreshing!! })
+    private fun observeRefreshing() {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer { isRefreshing -> binding.refresh.isRefreshing = isRefreshing!! })
     }
 
     private fun setupAdapter() {
@@ -122,7 +122,7 @@ class UpcomingMoviesFragment : Fragment() {
     }
 
     private fun observeMoviesList() {
-        viewModel.upcomingMoviesLiveData.observe(this, Observer { movieListItemEntities ->
+        viewModel.upcomingMoviesLiveData.observe(viewLifecycleOwner, Observer { movieListItemEntities ->
             adapter.submitList(movieListItemEntities)
         })
     }
