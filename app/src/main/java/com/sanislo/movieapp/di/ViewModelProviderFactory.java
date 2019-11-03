@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
+//TODO refactor to kotlin
 public class ViewModelProviderFactory<V> implements ViewModelProvider.Factory {
     private V viewModel;
 

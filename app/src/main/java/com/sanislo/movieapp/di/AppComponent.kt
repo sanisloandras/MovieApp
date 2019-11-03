@@ -7,6 +7,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
+//TODO update di logic overall
 @Singleton
 @Component(modules = [AndroidInjectionModule::class, AppModule::class, ActivityBuilder::class])
 interface AppComponent {
