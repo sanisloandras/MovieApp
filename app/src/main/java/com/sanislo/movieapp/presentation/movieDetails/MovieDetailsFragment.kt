@@ -128,15 +128,16 @@ class MovieDetailsFragment : Fragment() {
         mViewModel.getMovieModelLiveData(arguments!!.getInt(EXTRA_MOVIE_ID))
                 .observe(this, Observer { movieModel ->
                     if (movieModel == null) return@Observer
-                    mBinding.tvMovieTitle.text = movieModel.getTitle()
-                    mBinding.tvOverview.text = movieModel.getOverview()
-                    mBinding.tvReleaseDate.text = movieModel.getReleaseDate()
+                    mBinding.tvMovieTitle.text = movieModel.title
+                    mBinding.tvOverview.text = movieModel.overview
+                    mBinding.tvReleaseDate.text = movieModel.releaseDate
                     Glide.with(context!!)
-                            .load("https://image.tmdb.org/t/p/original/" + movieModel.getBackdropPath())
+                            //TODO move this to business logic layer
+                            .load("https://image.tmdb.org/t/p/original/" + movieModel.backdropPath)
                             .into(mBinding.ivBackdrop)
                     Glide.with(context!!)
                             //TODO move this to business logic layer
-                            .load("https://image.tmdb.org/t/p/original/" + movieModel.getPosterPath())
+                            .load("https://image.tmdb.org/t/p/original/" + movieModel.posterPath)
                             .into(mBinding.ivPoster)
                 })
     }
