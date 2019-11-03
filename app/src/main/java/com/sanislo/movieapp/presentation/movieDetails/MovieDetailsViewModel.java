@@ -18,6 +18,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+//TODO make this work without internet
 public class MovieDetailsViewModel extends ViewModel {
     public static final String TAG = MovieDetailsViewModel.class.getSimpleName();
 

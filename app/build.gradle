@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -56,9 +57,9 @@ dependencies {
 
     //di
     implementation "com.google.dagger:dagger:$rootProject.dagger2Version"
-    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.dagger2Version"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
     implementation "com.google.dagger:dagger-android-support:$rootProject.dagger2Version"
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger2Version"
 
     // network
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
@@ -68,11 +69,15 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$rootProject.lifecycle"
-    annotationProcessor "android.arch.lifecycle:compiler:$rootProject.lifecycle"
+    kapt "android.arch.lifecycle:compiler:$rootProject.lifecycle"
+    //TODO
+    /*implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"*/
 
     // Room
     implementation "android.arch.persistence.room:runtime:$rootProject.room"
-    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room"
+    kapt "android.arch.persistence.room:compiler:$rootProject.room"
     implementation "android.arch.persistence.room:rxjava2:$room"
     implementation "android.arch.paging:runtime:$rootProject.paging"
     implementation "android.arch.paging:rxjava2:$rootProject.paging_rxjava_support"
