@@ -11,7 +11,6 @@ import com.sanislo.movieapp.persistence.api.MovieAppApi
 import com.sanislo.movieapp.persistence.dao.UpcomingDao
 import com.sanislo.movieapp.persistence.response.movieList.MovieListResponse
 import io.reactivex.Single
-import java.util.concurrent.Executors
 
 class UpcomingMoviesRepositoryImpl(private val mMovieAppApi: MovieAppApi, private val mUpcomingDao: UpcomingDao) : UpcomingMoviesRepository {
     private val movieResponseMapper = MovieResponseMapper()
@@ -48,10 +47,8 @@ class UpcomingMoviesRepositoryImpl(private val mMovieAppApi: MovieAppApi, privat
     }
 
     override fun saveUpcomingMovies(movieListResponse: MovieListResponse) {
-        Executors.newSingleThreadExecutor().execute {
-            val inserted = mUpcomingDao.save(movieResponseMapper.map2(movieListResponse.results))
-            Log.d(TAG, "saveUpcomingMovies: " + inserted.size)
-        }
+        val inserted = mUpcomingDao.save(movieResponseMapper.map2(movieListResponse.results))
+        Log.d(TAG, "saveUpcomingMovies: " + inserted.size)
     }
 
     companion object {

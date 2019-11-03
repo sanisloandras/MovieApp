@@ -102,6 +102,7 @@ class MovieDetailsFragment : Fragment() {
         binding.rvYoutubeVideos.adapter = youtubeVideosAdapter
     }
 
+    //TODO fix actionBar inconsistency when on a tablet
     private fun setupActionBar() {
         (activity as AppCompatActivity).apply {
             setSupportActionBar(binding.toolbar)
@@ -123,6 +124,7 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun observeYoutubeVideos() {
+        //TODO fix duouble submitList call
         viewModel.youtubeVideos.observe(viewLifecycleOwner, Observer {
             youtubeVideosAdapter.submitList(it)
         })

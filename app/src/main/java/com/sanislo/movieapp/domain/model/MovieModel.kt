@@ -1,7 +1,8 @@
 package com.sanislo.movieapp.domain.model
 
+//TODO there might be null pointer exceptions because of mapping response from java to kotlin
 data class MovieModel(val originalLanguage: String,
-                      val imdbId: String,
+                      val imdbId: String?,
                       val video: Boolean,
                       val title: String,
                       val backdropPath: String,
