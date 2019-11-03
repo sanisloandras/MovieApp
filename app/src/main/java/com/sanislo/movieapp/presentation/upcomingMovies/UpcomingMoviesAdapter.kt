@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.Target
 import com.sanislo.movieapp.R
 import com.sanislo.movieapp.domain.model.MovieListItemModel
 
+//TODO use async diff util instead
 class UpcomingMoviesAdapter(diffCallback: DiffUtil.ItemCallback<MovieListItemModel>,
                             private val movieTitleText: Int,
                             private val movieTitleBackground: Int,
@@ -44,8 +45,10 @@ class UpcomingMoviesAdapter(diffCallback: DiffUtil.ItemCallback<MovieListItemMod
         init {
             tvTitle = itemView.findViewById(R.id.tv_movie_title)
             ivPoster = itemView.findViewById(R.id.iv_poster)
-            itemView.setOnClickListener { v ->
-                mClickInteractor?.onItemClick(getItem(adapterPosition))
+            mClickInteractor?.let { clickInteractor ->
+                itemView.setOnClickListener {
+                    clickInteractor.onItemClick(getItem(adapterPosition))
+                }
             }
         }
 
@@ -73,6 +76,7 @@ class UpcomingMoviesAdapter(diffCallback: DiffUtil.ItemCallback<MovieListItemMod
                         }
 
                         override fun onResourceReady(resource: Bitmap, model: Any, target: Target<Bitmap>, dataSource: DataSource, isFirstResource: Boolean): Boolean {
+                            //TODO use async palette
                             val palette = Palette.from(resource).generate()
                             if (palette.dominantSwatch != null) {
                                 val swatch = palette.dominantSwatch
