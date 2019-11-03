@@ -27,13 +27,16 @@ import java.util.List;
 
 public class UpcomingMoviesAdapter extends PagedListAdapter<MovieListItemModel, UpcomingMoviesAdapter.ViewHolder> {
     private ClickInteractor mClickInteractor;
+    private final int movieTitleText;
+    private final int movieTitleBackground;
 
-    protected UpcomingMoviesAdapter(@NonNull DiffUtil.ItemCallback<MovieListItemModel> diffCallback) {
+    public UpcomingMoviesAdapter(@NonNull DiffUtil.ItemCallback<MovieListItemModel> diffCallback,
+                                 int movieTitleText,
+                                 int movieTitleBackground,
+                                 ClickInteractor mClickInteractor) {
         super(diffCallback);
-    }
-
-    public UpcomingMoviesAdapter(@NonNull DiffUtil.ItemCallback<MovieListItemModel> diffCallback, ClickInteractor mClickInteractor) {
-        super(diffCallback);
+        this.movieTitleText = movieTitleText;
+        this.movieTitleBackground = movieTitleBackground;
         this.mClickInteractor = mClickInteractor;
     }
 
@@ -69,6 +72,8 @@ public class UpcomingMoviesAdapter extends PagedListAdapter<MovieListItemModel, 
         }
 
         public void bind() {
+            tvTitle.setTextColor(movieTitleText);
+            tvTitle.setBackgroundColor(movieTitleBackground);
             MovieListItemModel movieListItem = getItem(getAdapterPosition());
             if (movieListItem == null) {
                 tvTitle.setText("LOADING LOADING LOADING LOADING LOADING LOADING");
@@ -94,7 +99,6 @@ public class UpcomingMoviesAdapter extends PagedListAdapter<MovieListItemModel, 
                         @Override
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                             Palette palette = Palette.from(resource).generate();
-                            List<Palette.Swatch> swatchList = palette.getSwatches();
                             if (palette.getDominantSwatch() != null) {
                                 Palette.Swatch swatch = palette.getDominantSwatch();
                                 tvTitle.setTextColor(swatch.getBodyTextColor());

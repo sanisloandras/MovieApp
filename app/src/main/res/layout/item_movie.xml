@@ -36,7 +36,7 @@
             android:ellipsize="end"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:background="#90ffffff"
+            tools:background="@color/default_movie_title_background_color"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/iv_poster"
             app:layout_constraintLeft_toLeftOf="@+id/iv_poster"

@@ -70,7 +70,9 @@ public class UpcomingMoviesFragment extends Fragment {
         AndroidSupportInjection.inject(this);
         super.onCreate(savedInstanceState);
         obtainViewModel();
-        mAdapter = new UpcomingMoviesAdapter(getDiffCallback(), mClickInteractor);
+        int movieTitleText = ContextCompat.getColor(requireContext(), R.color.default_movie_title_text_color);
+        int movieTitleBackground = ContextCompat.getColor(requireContext(), R.color.default_movie_title_background_color);
+        mAdapter = new UpcomingMoviesAdapter(getDiffCallback(), movieTitleText, movieTitleBackground, mClickInteractor);
         mViewModel.getMovieListItemEntityLiveData().observe(this, movieListItemEntities -> {
             Log.d(TAG, "onCreate: " + movieListItemEntities);
             Log.d(TAG, "onCreate: " + movieListItemEntities.size());
