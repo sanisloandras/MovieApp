@@ -161,9 +161,9 @@ class UpcomingMoviesFragment : Fragment() {
 
         fun newInstance(): UpcomingMoviesFragment {
             val args = Bundle()
-            val fragment = UpcomingMoviesFragment()
-            fragment.arguments = args
-            return fragment
+            return UpcomingMoviesFragment().apply {
+                arguments = args
+            }
         }
     }
 }
