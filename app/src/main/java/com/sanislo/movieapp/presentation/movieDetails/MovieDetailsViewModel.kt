@@ -2,8 +2,8 @@ package com.sanislo.movieapp.presentation.movieDetails
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.LiveDataReactiveStreams.fromPublisher
+import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
 import com.sanislo.movieapp.domain.SingleLiveEvent
 import com.sanislo.movieapp.domain.model.MovieModel
@@ -20,11 +20,11 @@ class MovieDetailsViewModel(private val movieRepository: MovieRepository, privat
 
     private val compositeDisposable = CompositeDisposable()
     private val movieIdSubject = BehaviorSubject.create<Int>()
-    private val movieIdLiveData = LiveDataReactiveStreams.fromPublisher(movieIdSubject.toFlowable(BackpressureStrategy.LATEST))
-    val movieDetails: LiveData<MovieModel> = Transformations.switchMap(movieIdLiveData) {
+    private val movieIdLiveData = fromPublisher(movieIdSubject.toFlowable(BackpressureStrategy.LATEST))
+    val movieDetails: LiveData<MovieModel> = switchMap(movieIdLiveData) {
         movieRepository.movieLiveData(it)
     }
-    val youtubeVideos: LiveData<List<YoutubeVideoModel>> = Transformations.switchMap(movieIdLiveData) {
+    val youtubeVideos: LiveData<List<YoutubeVideoModel>> = switchMap(movieIdLiveData) {
         videoRepository.youtubeVideosLiveData(it)
     }
     val error = SingleLiveEvent<Throwable>()
