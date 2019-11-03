@@ -1,7 +1,7 @@
 package com.sanislo.movieapp.di
 
-import android.arch.persistence.room.Room
 import android.content.Context
+import androidx.room.Room
 import com.sanislo.movieapp.persistence.dao.*
 import com.sanislo.movieapp.persistence.db.MovieAppDatabase
 import dagger.Module

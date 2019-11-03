@@ -1,25 +1,26 @@
 package com.sanislo.movieapp.presentation.movieDetails
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.sanislo.movieapp.R
 import com.sanislo.movieapp.databinding.FragmentMovieDetailsBinding
 import com.sanislo.movieapp.domain.model.YoutubeVideoModel
+import com.sanislo.movieapp.presentation.HasDualPaneSupport
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -28,6 +29,7 @@ class MovieDetailsFragment : Fragment() {
     @Inject
     lateinit var mFactory: ViewModelProvider.Factory
 
+    private lateinit var hasDualPaneSupport: HasDualPaneSupport
     private lateinit var binding: FragmentMovieDetailsBinding
     private lateinit var viewModel: MovieDetailsViewModel
     private lateinit var youtubeVideosAdapter: YoutubeVideosAdapter
@@ -48,16 +50,22 @@ class MovieDetailsFragment : Fragment() {
             val customYoutubePlayerFragment = CustomYoutubePlayerFragment.newInstance(youtubeVideoModel.key)
             activity!!.supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.fl_movie_list_container, customYoutubePlayerFragment)
+                    .replace(if (hasDualPaneSupport.isInDualPaneMode()) hasDualPaneSupport.rightContainer() else hasDualPaneSupport.leftContainerId(),
+                            customYoutubePlayerFragment)
                     .addToBackStack(null)
                     .commit()
         }
 
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
+        try {
+            hasDualPaneSupport = context as HasDualPaneSupport
+        } catch (e: ClassCastException) {
+            throw RuntimeException("Parent activity must implement " + HasDualPaneSupport::class.java.simpleName)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

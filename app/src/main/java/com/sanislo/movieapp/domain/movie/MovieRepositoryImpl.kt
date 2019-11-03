@@ -1,7 +1,7 @@
 package com.sanislo.movieapp.domain.movie
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Transformations
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.sanislo.movieapp.domain.mapper.*
 import com.sanislo.movieapp.domain.model.GenreModel
 import com.sanislo.movieapp.domain.model.MovieModel

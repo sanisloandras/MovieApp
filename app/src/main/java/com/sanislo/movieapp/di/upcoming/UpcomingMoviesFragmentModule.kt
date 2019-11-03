@@ -1,6 +1,6 @@
 package com.sanislo.movieapp.di.upcoming
 
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider
 
 import com.sanislo.movieapp.di.ViewModelProviderFactory
 import com.sanislo.movieapp.domain.upcoming.UpcomingMoviesRepository

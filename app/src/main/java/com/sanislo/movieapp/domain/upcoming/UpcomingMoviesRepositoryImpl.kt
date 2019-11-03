@@ -1,9 +1,9 @@
 package com.sanislo.movieapp.domain.upcoming
 
-import android.arch.lifecycle.LiveData
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.sanislo.movieapp.domain.mapper.MovieListItemEntityToMovieListItemModel
 import com.sanislo.movieapp.domain.mapper.MovieResponseMapper
 import com.sanislo.movieapp.domain.model.MovieListItemModel

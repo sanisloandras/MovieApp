@@ -1,6 +1,6 @@
 package com.sanislo.movieapp.domain.movie
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 
 import com.sanislo.movieapp.domain.model.GenreModel
 import com.sanislo.movieapp.domain.model.MovieModel

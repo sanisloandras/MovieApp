@@ -1,7 +1,7 @@
 package com.sanislo.movieapp.domain.video
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Transformations
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.sanislo.movieapp.domain.mapper.MovieVideosReponseToVideoEntity
 import com.sanislo.movieapp.domain.mapper.VideoEntityToVideoModelMapper
 import com.sanislo.movieapp.domain.model.VideoModel

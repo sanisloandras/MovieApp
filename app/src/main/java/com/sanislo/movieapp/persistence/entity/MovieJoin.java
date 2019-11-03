@@ -1,7 +1,7 @@
 package com.sanislo.movieapp.persistence.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
 
 @Entity(tableName = "movie_join",
     primaryKeys = {"movieId", "genreId"},

@@ -1,8 +1,8 @@
 package com.sanislo.movieapp.di;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 //TODO refactor to kotlin
 public class ViewModelProviderFactory<V> implements ViewModelProvider.Factory {

@@ -1,9 +1,9 @@
 package com.sanislo.movieapp.presentation
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.sanislo.movieapp.R
 import com.sanislo.movieapp.presentation.upcomingMovies.UpcomingMoviesFragment
 import dagger.android.AndroidInjection
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, HasDualPan
                 .commit()
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment>? {
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
     }
 

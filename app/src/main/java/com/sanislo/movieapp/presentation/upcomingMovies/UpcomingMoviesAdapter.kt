@@ -1,15 +1,13 @@
 package com.sanislo.movieapp.presentation.upcomingMovies
 
-import android.arch.paging.PagedListAdapter
 import android.graphics.Bitmap
-import android.support.v7.graphics.Palette
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -38,7 +36,7 @@ class UpcomingMoviesAdapter(diffCallback: DiffUtil.ItemCallback<MovieListItemMod
         fun onItemClick(movieListItemModel: MovieListItemModel?)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         private val tvTitle: TextView
         private val ivPoster: ImageView
 
@@ -77,7 +75,7 @@ class UpcomingMoviesAdapter(diffCallback: DiffUtil.ItemCallback<MovieListItemMod
 
                         override fun onResourceReady(resource: Bitmap, model: Any, target: Target<Bitmap>, dataSource: DataSource, isFirstResource: Boolean): Boolean {
                             //TODO use async palette
-                            val palette = Palette.from(resource).generate()
+                            val palette = androidx.palette.graphics.Palette.from(resource).generate()
                             if (palette.dominantSwatch != null) {
                                 val swatch = palette.dominantSwatch
                                 tvTitle.setTextColor(swatch!!.bodyTextColor)

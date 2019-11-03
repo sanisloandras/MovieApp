@@ -1,8 +1,8 @@
 package com.sanislo.movieapp.domain.upcoming
 
 import android.annotation.SuppressLint
-import android.arch.paging.PagedList
 import android.util.Log
+import androidx.paging.PagedList
 import com.sanislo.movieapp.domain.model.MovieListItemModel
 import io.reactivex.schedulers.Schedulers
 

@@ -1,6 +1,6 @@
 package com.sanislo.movieapp.domain.video
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 
 import com.sanislo.movieapp.domain.model.VideoModel
 import com.sanislo.movieapp.domain.model.YoutubeVideoModel

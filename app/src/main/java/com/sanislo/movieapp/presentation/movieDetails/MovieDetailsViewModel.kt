@@ -1,10 +1,10 @@
 package com.sanislo.movieapp.presentation.movieDetails
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.LiveDataReactiveStreams
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.sanislo.movieapp.domain.SingleLiveEvent
 import com.sanislo.movieapp.domain.model.MovieModel
 import com.sanislo.movieapp.domain.model.YoutubeVideoModel

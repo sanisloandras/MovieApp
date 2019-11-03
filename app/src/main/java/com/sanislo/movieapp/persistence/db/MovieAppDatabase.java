@@ -1,7 +1,7 @@
 package com.sanislo.movieapp.persistence.db;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
 
 import com.sanislo.movieapp.persistence.dao.GenreDao;
 import com.sanislo.movieapp.persistence.dao.MovieDao;

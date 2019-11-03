@@ -1,9 +1,8 @@
 package com.sanislo.movieapp.presentation.movieDetails
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.view.View
-
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerSupportFragment

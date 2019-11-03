@@ -1,8 +1,8 @@
 package com.sanislo.movieapp.presentation.upcomingMovies
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sanislo.movieapp.domain.SingleLiveEvent
 import com.sanislo.movieapp.domain.upcoming.UpcomingMoviesRepository
 import io.reactivex.android.schedulers.AndroidSchedulers

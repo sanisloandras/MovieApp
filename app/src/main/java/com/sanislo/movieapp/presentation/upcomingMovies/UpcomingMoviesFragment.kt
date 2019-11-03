@@ -1,20 +1,19 @@
 package com.sanislo.movieapp.presentation.upcomingMovies
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.res.Configuration
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DiffUtil
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.support.v4.widget.RxSwipeRefreshLayout
 import com.sanislo.movieapp.R
 import com.sanislo.movieapp.databinding.FragmentUpcomingMoviesBinding
@@ -30,7 +29,7 @@ class UpcomingMoviesFragment : Fragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
-    private var hasDualPaneSupport: HasDualPaneSupport? = null
+    private lateinit var hasDualPaneSupport: HasDualPaneSupport
 
     private val compositeDisposable = CompositeDisposable()
     lateinit var binding: FragmentUpcomingMoviesBinding
@@ -52,10 +51,10 @@ class UpcomingMoviesFragment : Fragment() {
             //TODO move navigation logic to vm
             movieListItemModel?.let {
                 val fragment = MovieDetailsFragment.newInstance(movieListItemModel.id)
-                val containerId = if (hasDualPaneSupport!!.isInDualPaneMode())
-                    hasDualPaneSupport!!.rightContainer()
+                val containerId = if (hasDualPaneSupport.isInDualPaneMode())
+                    hasDualPaneSupport.rightContainer()
                 else
-                    hasDualPaneSupport!!.leftContainerId()
+                    hasDualPaneSupport.leftContainerId()
                 activity!!.supportFragmentManager
                         .beginTransaction()
                         .replace(containerId, fragment)
@@ -65,15 +64,14 @@ class UpcomingMoviesFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
         try {
-            hasDualPaneSupport = context as HasDualPaneSupport?
+            hasDualPaneSupport = context as HasDualPaneSupport
         } catch (e: ClassCastException) {
             throw RuntimeException("Parent activity must implement " + HasDualPaneSupport::class.java.simpleName)
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,7 +113,7 @@ class UpcomingMoviesFragment : Fragment() {
             SPAN_COUNT_LANDSCAPE
         else
             SPAN_COUNT_PORTRAIT
-        val gridLayoutManager = GridLayoutManager(context, spanCount)
+        val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(context, spanCount)
         val movieTitleText = ContextCompat.getColor(requireContext(), R.color.default_movie_title_text_color)
         val movieTitleBackground = ContextCompat.getColor(requireContext(), R.color.default_movie_title_background_color)
         adapter = UpcomingMoviesAdapter(diffCallback, movieTitleText, movieTitleBackground, mClickInteractor)
