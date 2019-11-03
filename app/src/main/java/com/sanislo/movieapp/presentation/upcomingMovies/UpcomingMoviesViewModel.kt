@@ -9,25 +9,29 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-//TODO improve no internet handling
 class UpcomingMoviesViewModel(private val mUpcomingMoviesRepository: UpcomingMoviesRepository) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
     val isRefreshing = MutableLiveData<Boolean>()
-    //TODO use this
-    private val error = SingleLiveEvent<Throwable>()
+    val error = SingleLiveEvent<Throwable>()
     val upcomingMoviesLiveData = mUpcomingMoviesRepository.upcomingMoviesLiveData()
 
     @SuppressLint("CheckResult")
     fun refresh() {
         mUpcomingMoviesRepository.refreshUpcoming()
+                .ignoreElement()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { d ->
                     compositeDisposable.add(d)
-                    isRefreshing.setValue(true)
+                    isRefreshing.value = true
                 }
-                .subscribe({ _ -> isRefreshing.setValue(false) }, { this.error.setValue(it) })
+                .doFinally {
+                    isRefreshing.value = false
+                }
+                .subscribe({}, {
+                    error.value = it
+                })
     }
 
     override fun onCleared() {

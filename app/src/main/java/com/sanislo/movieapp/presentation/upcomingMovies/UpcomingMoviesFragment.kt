@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
@@ -27,14 +28,14 @@ import javax.inject.Inject
 class UpcomingMoviesFragment : Fragment() {
 
     @Inject
-    lateinit var mFactory: ViewModelProvider.Factory
+    lateinit var factory: ViewModelProvider.Factory
 
     private var hasDualPaneSupport: HasDualPaneSupport? = null
 
     private val compositeDisposable = CompositeDisposable()
-    lateinit var mBinding: FragmentUpcomingMoviesBinding
-    lateinit var mViewModel: UpcomingMoviesViewModel
-    lateinit var mAdapter: UpcomingMoviesAdapter
+    lateinit var binding: FragmentUpcomingMoviesBinding
+    lateinit var viewModel: UpcomingMoviesViewModel
+    lateinit var adapter: UpcomingMoviesAdapter
 
     private val diffCallback: DiffUtil.ItemCallback<MovieListItemModel> = object : DiffUtil.ItemCallback<MovieListItemModel>() {
             override fun areItemsTheSame(oldItem: MovieListItemModel, newItem: MovieListItemModel): Boolean {
@@ -78,28 +79,22 @@ class UpcomingMoviesFragment : Fragment() {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
         obtainViewModel()
-        val movieTitleText = ContextCompat.getColor(requireContext(), R.color.default_movie_title_text_color)
-        val movieTitleBackground = ContextCompat.getColor(requireContext(), R.color.default_movie_title_background_color)
-        mAdapter = UpcomingMoviesAdapter(diffCallback, movieTitleText, movieTitleBackground, mClickInteractor)
-        mViewModel.upcomingMoviesLiveData.observe(this, Observer { movieListItemEntities ->
-            mAdapter.submitList(movieListItemEntities)
-        })
     }
 
     private fun obtainViewModel() {
-        mViewModel = ViewModelProviders.of(
+        viewModel = ViewModelProviders.of(
                 this,
-                mFactory)
+                factory)
                 .get(UpcomingMoviesViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = DataBindingUtil.inflate(inflater,
+        binding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_upcoming_movies,
                 container,
                 false)
-        mBinding.viewModel = mViewModel
-        return mBinding.root
+        binding.viewModel = viewModel
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,10 +102,12 @@ class UpcomingMoviesFragment : Fragment() {
         setupAdapter()
         setupSwipeRefresh()
         observeResfreshing()
+        observeErrors()
+        observeMoviesList()
     }
 
     private fun observeResfreshing() {
-        mViewModel.isRefreshing.observe(this, Observer { isRefreshing -> mBinding.refresh.isRefreshing = isRefreshing!! })
+        viewModel.isRefreshing.observe(this, Observer { isRefreshing -> binding.refresh.isRefreshing = isRefreshing!! })
     }
 
     private fun setupAdapter() {
@@ -119,14 +116,32 @@ class UpcomingMoviesFragment : Fragment() {
         else
             SPAN_COUNT_PORTRAIT
         val gridLayoutManager = GridLayoutManager(context, spanCount)
-        mBinding.rvUpcomingMovies.layoutManager = gridLayoutManager
-        mBinding.rvUpcomingMovies.adapter = mAdapter
+        val movieTitleText = ContextCompat.getColor(requireContext(), R.color.default_movie_title_text_color)
+        val movieTitleBackground = ContextCompat.getColor(requireContext(), R.color.default_movie_title_background_color)
+        adapter = UpcomingMoviesAdapter(diffCallback, movieTitleText, movieTitleBackground, mClickInteractor)
+        binding.rvUpcomingMovies.layoutManager = gridLayoutManager
+        binding.rvUpcomingMovies.adapter = adapter
+    }
+
+    private fun observeMoviesList() {
+        viewModel.upcomingMoviesLiveData.observe(this, Observer { movieListItemEntities ->
+            adapter.submitList(movieListItemEntities)
+        })
     }
 
     private fun setupSwipeRefresh() {
-        val swipeRefreshDisposable = RxSwipeRefreshLayout.refreshes(mBinding.refresh)
-                .subscribe { _ -> mViewModel.refresh() }
+        val swipeRefreshDisposable = RxSwipeRefreshLayout.refreshes(binding.refresh)
+                .subscribe { _ -> viewModel.refresh() }
         compositeDisposable.add(swipeRefreshDisposable)
+    }
+
+    private fun observeErrors() {
+        viewModel.error.observe(viewLifecycleOwner, Observer { throwable ->
+            Snackbar.make(binding.root, if (throwable != null)
+                throwable.localizedMessage
+            else
+                getString(R.string.error), Snackbar.LENGTH_LONG).show()
+        })
     }
 
     override fun onStart() {
