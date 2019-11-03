@@ -31,7 +31,11 @@ class YoutubeVideosAdapter(diffCallback: DiffUtil.ItemCallback<YoutubeVideoModel
         private val ivYoutubeThumbnail: ImageView
 
         init {
-            itemView.setOnClickListener { mClickInteractor?.onClick(getItem(adapterPosition)) }
+            mClickInteractor?.let {
+                itemView.setOnClickListener {
+                    mClickInteractor.onClick(getItem(adapterPosition))
+                }
+            }
             ivYoutubeThumbnail = itemView.findViewById(R.id.iv_youtube_thumbnail)
         }
 

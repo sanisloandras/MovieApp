@@ -66,6 +66,7 @@ class UpcomingMoviesFragment : Fragment() {
     }
 
     override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         try {
             hasDualPaneSupport = context as HasDualPaneSupport?
@@ -76,7 +77,6 @@ class UpcomingMoviesFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
         obtainViewModel()
     }
